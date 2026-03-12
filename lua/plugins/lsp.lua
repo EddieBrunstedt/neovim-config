@@ -7,7 +7,6 @@ return {
     { 'mason-org/mason.nvim', opts = {} },
     'WhoIsSethDaniel/mason-tool-installer.nvim',
     { 'j-hui/fidget.nvim', opts = {} },
-    'saghen/blink.cmp',
   },
   config = function()
     vim.api.nvim_create_autocmd('LspAttach', {
@@ -69,15 +68,14 @@ return {
       update_in_insert = false,
       severity_sort = true,
       float = { border = 'rounded', source = 'if_many' },
-      underline = { severity = vim.diagnostic.severity.ERROR },
+      underline = { severity = { min = vim.diagnostic.severity.ERROR } },
       virtual_text = true,
       virtual_lines = false,
       jump = { float = true },
     }
 
-    local capabilities = require('blink.cmp').get_lsp_capabilities()
-
     -- Language servers
+    --  Capabilities are automatically extended by blink.cmp, no manual merging needed.
     local servers = {
       biome = {},
       gopls = {
@@ -98,13 +96,12 @@ return {
     }
 
     for server_name, server_config in pairs(servers) do
-      server_config.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server_config.capabilities or {})
       vim.lsp.config(server_name, server_config)
       vim.lsp.enable(server_name)
     end
 
     local ensure_installed = vim.tbl_keys(servers or {})
-    vim.list_extend(ensure_installed, { 'lua-language-server', 'stylua', 'prettier' })
+    vim.list_extend(ensure_installed, { 'lua-language-server', 'stylua', 'prettier', 'tailwindcss-language-server' })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
     -- Special Lua config for editing Neovim config and plugins
@@ -123,12 +120,16 @@ return {
           },
           workspace = {
             checkThirdParty = false,
-            library = vim.api.nvim_get_runtime_file('', true),
+            library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), {
+              '${3rd}/luv/library',
+              '${3rd}/busted/library',
+            }),
           },
         })
       end,
       settings = { Lua = {} },
     })
     vim.lsp.enable 'lua_ls'
+    vim.lsp.enable 'tailwindcss'
   end,
 }
