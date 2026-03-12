@@ -2,9 +2,6 @@
 
 return {
   'nvim-treesitter/nvim-treesitter',
-  lazy = false,
-  build = ':TSUpdate',
-  branch = 'main',
   dependencies = {
     'nvim-treesitter/nvim-treesitter-context',
   },
@@ -34,5 +31,9 @@ return {
       'zig',
     }
     require('nvim-treesitter').install(parsers)
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = parsers,
+      callback = function() vim.treesitter.start() end,
+    })
   end,
 }

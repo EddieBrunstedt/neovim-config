@@ -8,6 +8,7 @@ vim.g.maplocalleader = ' '
 vim.g.have_nerd_font = true
 
 -- Indentation and line wrapping
+vim.o.tabstop = 2
 vim.o.breakindent = true
 
 -- Interface

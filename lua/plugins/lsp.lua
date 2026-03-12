@@ -21,8 +21,8 @@ return {
         end
 
         -- LSP keymaps
-        map('gO', Snacks.picker.lsp_symbols, 'Open Document Symbols')
-        map('gW', Snacks.picker.lsp_workspace_symbols, 'Open Workspace Symbols')
+        map('<leader>ss', Snacks.picker.lsp_symbols, 'Open Document Symbols')
+        map('<leader>sS', Snacks.picker.lsp_workspace_symbols, 'Open Workspace Symbols')
         map('grD', Snacks.picker.lsp_declarations, '[G]oto [D]eclaration')
         map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
         map('grd', Snacks.picker.lsp_definitions, '[G]oto [D]efinition')
@@ -67,38 +67,19 @@ return {
 
     -- Diagnostics
     vim.diagnostic.config {
+      update_in_insert = false,
       severity_sort = true,
       float = { border = 'rounded', source = 'if_many' },
       underline = { severity = vim.diagnostic.severity.ERROR },
-      signs = vim.g.have_nerd_font and {
-        text = {
-          [vim.diagnostic.severity.ERROR] = '󰅚 ',
-          [vim.diagnostic.severity.WARN] = '󰀪 ',
-          [vim.diagnostic.severity.INFO] = '󰋽 ',
-          [vim.diagnostic.severity.HINT] = '󰌶 ',
-        },
-      } or {},
-      virtual_text = {
-        source = 'if_many',
-        spacing = 2,
-        format = function(diagnostic)
-          local diagnostic_message = {
-            [vim.diagnostic.severity.ERROR] = diagnostic.message,
-            [vim.diagnostic.severity.WARN] = diagnostic.message,
-            [vim.diagnostic.severity.INFO] = diagnostic.message,
-            [vim.diagnostic.severity.HINT] = diagnostic.message,
-          }
-          return diagnostic_message[diagnostic.severity]
-        end,
-      },
+      virtual_text = true,
+      virtual_lines = false,
+      jump = { float = true },
     }
 
     local capabilities = require('blink.cmp').get_lsp_capabilities()
 
     -- Language servers
     local servers = {
-      stylua = {},
-      prettier = {},
       gopls = {
         settings = {
           gopls = {
