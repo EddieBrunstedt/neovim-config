@@ -5,7 +5,6 @@ return {
   'neovim/nvim-lspconfig',
   dependencies = {
     { 'mason-org/mason.nvim', opts = {} },
-    'mason-org/mason-lspconfig.nvim',
     'WhoIsSethDaniel/mason-tool-installer.nvim',
     { 'j-hui/fidget.nvim', opts = {} },
     'saghen/blink.cmp',
@@ -80,6 +79,7 @@ return {
 
     -- Language servers
     local servers = {
+      biome = {},
       gopls = {
         settings = {
           gopls = {
@@ -95,15 +95,6 @@ return {
           },
         },
       },
-      lua_ls = {
-        settings = {
-          Lua = {
-            completion = {
-              callSnippet = 'Replace',
-            },
-          },
-        },
-      },
     }
 
     for server_name, server_config in pairs(servers) do
@@ -113,6 +104,31 @@ return {
     end
 
     local ensure_installed = vim.tbl_keys(servers or {})
+    vim.list_extend(ensure_installed, { 'lua-language-server', 'stylua', 'prettier' })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+
+    -- Special Lua config for editing Neovim config and plugins
+    vim.lsp.config('lua_ls', {
+      on_init = function(client)
+        if client.workspace_folders then
+          local path = client.workspace_folders[1].name
+          if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then
+            return
+          end
+        end
+        client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+          runtime = {
+            version = 'LuaJIT',
+            path = { 'lua/?.lua', 'lua/?/init.lua' },
+          },
+          workspace = {
+            checkThirdParty = false,
+            library = vim.api.nvim_get_runtime_file('', true),
+          },
+        })
+      end,
+      settings = { Lua = {} },
+    })
+    vim.lsp.enable 'lua_ls'
   end,
 }
