@@ -2,6 +2,21 @@
 
 local should_format_on_save = true
 
+local biome_config_files = { 'biome.json', 'biome.jsonc' }
+
+local function has_biome_config(bufnr)
+  local filepath = vim.api.nvim_buf_get_name(bufnr)
+  local dir = vim.fs.dirname(filepath)
+  return vim.fs.find(biome_config_files, { path = dir, upward = true })[1] ~= nil
+end
+
+local function web_formatter(bufnr)
+  if has_biome_config(bufnr) then
+    return { 'biome' }
+  end
+  return { 'prettier' }
+end
+
 return {
   'stevearc/conform.nvim',
   event = { 'BufWritePre' },
@@ -44,14 +59,16 @@ return {
     formatters_by_ft = {
       lua = { 'stylua' },
       sh = { 'shfmt' },
-      css = { 'prettier' },
-      html = { 'prettier' },
-      javascript = { 'prettier' },
-      javascriptreact = { 'prettier' },
-      typescript = { 'prettier' },
-      typescriptreact = { 'prettier' },
+      css = web_formatter,
+      html = web_formatter,
+      json = web_formatter,
+      jsonc = web_formatter,
+      javascript = web_formatter,
+      javascriptreact = web_formatter,
+      typescript = web_formatter,
+      typescriptreact = web_formatter,
+      vue = web_formatter,
       markdown = { 'prettier' },
-      vue = { 'prettier' },
     },
   },
 }
