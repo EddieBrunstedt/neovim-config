@@ -4,10 +4,9 @@ local modules = {
   'plugins.colorscheme',
   'plugins.guess-indent',
   'plugins.gitsigns',
-  'plugins.which-key',
   'plugins.todo-comments',
   'plugins.mini',
-  'plugins.snacks',
+  'plugins.pick',
   'plugins.oil',
   'plugins.quickfix',
   'plugins.flash',
@@ -19,6 +18,7 @@ local modules = {
   'plugins.treesitter',
   'plugins.indent-blankline',
   'plugins.debug',
+  'plugins.clue',
 }
 
 for _, module in ipairs(modules) do

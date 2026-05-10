@@ -13,6 +13,3 @@ require 'commands'
 
 -- Plugins ───────────────────────────────────────────────────────────────
 require 'config.pack'
-
--- Appearance ────────────────────────────────────────────────────────────
-require 'config.highlights'

@@ -6,22 +6,25 @@ require('fidget').setup {}
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
   callback = function(event)
-    local Snacks = require 'snacks'
+    local extra = require 'mini.extra'
+    local lsp_picker = function(scope)
+      return function() extra.pickers.lsp { scope = scope } end
+    end
     local map = function(keys, func, desc, mode)
       mode = mode or 'n'
       vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
     end
 
     -- LSP keymaps
-    map('<leader>ss', Snacks.picker.lsp_symbols, 'Open Document Symbols')
-    map('<leader>sS', Snacks.picker.lsp_workspace_symbols, 'Open Workspace Symbols')
-    map('grD', Snacks.picker.lsp_declarations, '[G]oto [D]eclaration')
-    map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
-    map('grd', Snacks.picker.lsp_definitions, '[G]oto [D]efinition')
-    map('gri', Snacks.picker.lsp_implementations, '[G]oto [I]mplementation')
-    map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
-    map('grr', Snacks.picker.lsp_references, '[G]oto [R]eferences')
-    map('grt', Snacks.picker.lsp_type_definitions, '[G]oto [T]ype Definition')
+    map('<leader>ss', lsp_picker 'document_symbol', 'Document symbols')
+    map('<leader>sS', lsp_picker 'workspace_symbol_live', 'Workspace symbols')
+    map('grD', lsp_picker 'declaration', 'Goto declaration')
+    map('gra', vim.lsp.buf.code_action, 'Code action', { 'n', 'x' })
+    map('grd', lsp_picker 'definition', 'Goto definition')
+    map('gri', lsp_picker 'implementation', 'Goto implementation')
+    map('grn', vim.lsp.buf.rename, 'Rename')
+    map('grr', lsp_picker 'references', 'Goto references')
+    map('grt', lsp_picker 'type_definition', 'Goto type definition')
 
     -- Document highlight: highlight symbol under cursor
     local client = vim.lsp.get_client_by_id(event.data.client_id)
@@ -50,8 +53,10 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     -- Inlay hints toggle
     if client and client:supports_method('textDocument/inlayHint', event.buf) then
-      map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints')
+      map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, 'Toggle inlay hints')
     end
+
+    if _G.MiniClue ~= nil then _G.MiniClue.ensure_buf_triggers(event.buf) end
   end,
 })
 

@@ -23,7 +23,7 @@ require('gitsigns').setup {
       else
         gitsigns.nav_hunk 'next'
       end
-    end, { desc = 'Jump to next git [c]hange' })
+    end, { desc = 'Next git change' })
 
     map('n', '[c', function()
       if vim.wo.diff then
@@ -31,28 +31,30 @@ require('gitsigns').setup {
       else
         gitsigns.nav_hunk 'prev'
       end
-    end, { desc = 'Jump to previous git [c]hange' })
+    end, { desc = 'Prev git change' })
 
-    map('v', '<leader>hs', function() gitsigns.stage_hunk { vim.fn.line '.', vim.fn.line 'v' } end, { desc = 'git [s]tage hunk' })
-    map('v', '<leader>hr', function() gitsigns.reset_hunk { vim.fn.line '.', vim.fn.line 'v' } end, { desc = 'git [r]eset hunk' })
+    map('v', '<leader>hs', function() gitsigns.stage_hunk { vim.fn.line '.', vim.fn.line 'v' } end, { desc = 'Stage hunk' })
+    map('v', '<leader>hr', function() gitsigns.reset_hunk { vim.fn.line '.', vim.fn.line 'v' } end, { desc = 'Reset hunk' })
     -- normal mode
-    map('n', '<leader>hs', gitsigns.stage_hunk, { desc = 'git [s]tage hunk' })
-    map('n', '<leader>hr', gitsigns.reset_hunk, { desc = 'git [r]eset hunk' })
-    map('n', '<leader>hS', gitsigns.stage_buffer, { desc = 'git [S]tage buffer' })
-    map('n', '<leader>hR', gitsigns.reset_buffer, { desc = 'git [R]eset buffer' })
-    map('n', '<leader>hp', gitsigns.preview_hunk, { desc = 'git [p]review hunk' })
-    map('n', '<leader>hi', gitsigns.preview_hunk_inline, { desc = 'git preview hunk [i]nline' })
-    map('n', '<leader>hb', function() gitsigns.blame_line { full = true } end, { desc = 'git [b]lame line' })
-    map('n', '<leader>hd', gitsigns.diffthis, { desc = 'git [d]iff against index' })
-    map('n', '<leader>hD', function() gitsigns.diffthis '@' end, { desc = 'git [D]iff against last commit' })
-    map('n', '<leader>hQ', function() gitsigns.setqflist 'all' end, { desc = 'Populate [Q]uickfix list with ALL hunks' })
-    map('n', '<leader>hq', gitsigns.setqflist, { desc = 'Populate [Q]uickfix list with hunks' })
+    map('n', '<leader>hs', gitsigns.stage_hunk, { desc = 'Stage hunk' })
+    map('n', '<leader>hr', gitsigns.reset_hunk, { desc = 'Reset hunk' })
+    map('n', '<leader>hS', gitsigns.stage_buffer, { desc = 'Stage buffer' })
+    map('n', '<leader>hR', gitsigns.reset_buffer, { desc = 'Reset buffer' })
+    map('n', '<leader>hp', gitsigns.preview_hunk, { desc = 'Preview hunk' })
+    map('n', '<leader>hi', gitsigns.preview_hunk_inline, { desc = 'Preview hunk inline' })
+    map('n', '<leader>hb', function() gitsigns.blame_line { full = true } end, { desc = 'Blame line' })
+    map('n', '<leader>hd', gitsigns.diffthis, { desc = 'Diff against index' })
+    map('n', '<leader>hD', function() gitsigns.diffthis '@' end, { desc = 'Diff against last commit' })
+    map('n', '<leader>hQ', function() gitsigns.setqflist 'all' end, { desc = 'All hunks to quickfix' })
+    map('n', '<leader>hq', gitsigns.setqflist, { desc = 'Hunks to quickfix' })
 
     -- Toggles
-    map('n', '<leader>tb', gitsigns.toggle_current_line_blame, { desc = '[T]oggle git show [b]lame line' })
-    map('n', '<leader>tw', gitsigns.toggle_word_diff)
+    map('n', '<leader>tb', gitsigns.toggle_current_line_blame, { desc = 'Toggle blame line' })
+    map('n', '<leader>tw', gitsigns.toggle_word_diff, { desc = 'Toggle word diff' })
 
     -- Text object
     map({ 'o', 'x' }, 'ih', gitsigns.select_hunk)
+
+    if _G.MiniClue ~= nil then _G.MiniClue.ensure_buf_triggers(bufnr) end
   end,
 }

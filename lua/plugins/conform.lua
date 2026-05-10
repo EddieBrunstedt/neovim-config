@@ -51,9 +51,9 @@ require('conform').setup {
   },
 }
 
-vim.keymap.set({ 'n', 'v' }, '<leader>f', function() require('conform').format { async = true } end, { desc = '[F]ormat buffer' })
+vim.keymap.set({ 'n', 'v' }, '<leader>f', function() require('conform').format { async = true } end, { desc = 'Format buffer' })
 
 vim.keymap.set('n', '<leader>tf', function()
   should_format_on_save = not should_format_on_save
   print('Should format on save: ' .. (should_format_on_save and 'True' or 'False'))
-end, { desc = '[T]oggle [F]ormat on save' })
+end, { desc = 'Toggle format on save' })

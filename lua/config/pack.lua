@@ -1,5 +1,3 @@
--- Built-in Neovim plugin manager setup
-
 -- Plugin-specific globals read during plugin startup
 vim.g.db_ui_use_nerd_fonts = 1
 
@@ -51,12 +49,13 @@ vim.pack.add({
   gh 'jay-babu/mason-nvim-dap.nvim',
 
   -- UI / UX
-  gh 'EdenEast/nightfox.nvim',
+  -- gh 'EdenEast/nightfox.nvim',
+  -- gh 'scottmckendry/cyberdream.nvim',
+  -- gh 'kepano/flexoki-neovim',
+  gh 'folke/tokyonight.nvim',
   gh 'NMAC427/guess-indent.nvim',
   gh 'folke/flash.nvim',
-  gh 'folke/snacks.nvim',
   gh 'folke/todo-comments.nvim',
-  gh 'folke/which-key.nvim',
   gh 'lewis6991/gitsigns.nvim',
   gh 'lukas-reineke/indent-blankline.nvim',
   gh 'nvim-mini/mini.nvim',
