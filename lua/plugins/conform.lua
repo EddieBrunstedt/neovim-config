@@ -2,6 +2,13 @@
 
 local should_format_on_save = true
 
+local format_on_save_filetypes = {
+  -- Enable filetypes here to format them automatically on save.
+  lua = true,
+  rust = true,
+  -- python = true,
+}
+
 local biome_config_files = { 'biome.json', 'biome.jsonc' }
 
 local function has_biome_config(bufnr)
@@ -11,64 +18,42 @@ local function has_biome_config(bufnr)
 end
 
 local function web_formatter(bufnr)
-  if has_biome_config(bufnr) then
-    return { 'biome' }
-  end
+  if has_biome_config(bufnr) then return { 'biome' } end
   return { 'prettier' }
 end
 
-return {
-  'stevearc/conform.nvim',
-  event = { 'BufWritePre' },
-  cmd = { 'ConformInfo' },
-  keys = {
-    {
-      '<leader>f',
-      function()
-        require('conform').format { async = true, lsp_format = 'fallback' }
-      end,
-      mode = '',
-      desc = '[F]ormat buffer',
-    },
-    {
-      '<leader>tf',
-      function()
-        should_format_on_save = not should_format_on_save
-        print('Should format on save: ' .. (should_format_on_save and 'True' or 'False'))
-      end,
-      desc = '[T]oggle [F]ormat on save',
-    },
-  },
-  opts = {
-    notify_on_error = false,
-    format_on_save = function(bufnr)
-      if not should_format_on_save then
-        return nil
-      end
+require('conform').setup {
+  notify_on_error = false,
+  format_on_save = function(bufnr)
+    if not should_format_on_save then return nil end
 
-      local disable_filetypes = { c = true, cpp = true }
-      if disable_filetypes[vim.bo[bufnr].filetype] then
-        return nil
-      else
-        return {
-          timeout_ms = 500,
-          lsp_format = 'fallback',
-        }
-      end
-    end,
-    formatters_by_ft = {
-      lua = { 'stylua' },
-      sh = { 'shfmt' },
-      css = web_formatter,
-      html = web_formatter,
-      json = web_formatter,
-      jsonc = web_formatter,
-      javascript = web_formatter,
-      javascriptreact = web_formatter,
-      typescript = web_formatter,
-      typescriptreact = web_formatter,
-      vue = web_formatter,
-      markdown = { 'prettier' },
-    },
+    if format_on_save_filetypes[vim.bo[bufnr].filetype] then
+      return { timeout_ms = 500 }
+    else
+      return nil
+    end
+  end,
+  default_format_opts = {
+    lsp_format = 'fallback',
+  },
+  formatters_by_ft = {
+    sh = { 'shfmt' },
+    css = web_formatter,
+    html = web_formatter,
+    json = web_formatter,
+    jsonc = web_formatter,
+    javascript = web_formatter,
+    javascriptreact = web_formatter,
+    typescript = web_formatter,
+    typescriptreact = web_formatter,
+    vue = web_formatter,
+    markdown = { 'prettier' },
   },
 }
+
+vim.keymap.set({ 'n', 'v' }, '<leader>f', function() require('conform').format { async = true } end, { desc = '[F]ormat buffer' })
+
+vim.keymap.set('n', '<leader>tf', function()
+  should_format_on_save = not should_format_on_save
+  print('Should format on save: ' .. (should_format_on_save and 'True' or 'False'))
+end, { desc = '[T]oggle [F]ormat on save' })

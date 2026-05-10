@@ -13,12 +13,8 @@ vim.keymap.set('n', '<leader><tab>', '<C-^>', { desc = 'Go to previous buffer' }
 
 -- Diagnostics
 vim.keymap.set('n', 'gl', vim.diagnostic.open_float, { desc = 'Show diagnostic [L]ine' })
-vim.keymap.set('n', '<leader>xd', function()
-  vim.diagnostic.setloclist()
-end, { desc = 'Buffer [D]iagnostics to loclist' })
-vim.keymap.set('n', '<leader>xD', function()
-  vim.diagnostic.setqflist()
-end, { desc = 'Workspace [D]iagnostics to quickfix' })
+vim.keymap.set('n', '<leader>xd', function() vim.diagnostic.setloclist() end, { desc = 'Buffer [D]iagnostics to loclist' })
+vim.keymap.set('n', '<leader>xD', function() vim.diagnostic.setqflist() end, { desc = 'Workspace [D]iagnostics to quickfix' })
 
 -- Yank utilities (see commands.lua)
 vim.keymap.set('n', '<leader>yb', '<CMD>:BufferYank<CR>', { desc = '[Y]ank [B]uffer contents' })

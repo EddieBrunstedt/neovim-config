@@ -1,6 +1,3 @@
 -- Automatic indentation style detection
 
-return {
-  'NMAC427/guess-indent.nvim',
-  opts = {},
-}
+require('guess-indent').setup {}
