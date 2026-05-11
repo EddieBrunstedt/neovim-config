@@ -12,7 +12,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
     local map = function(keys, func, desc, mode)
       mode = mode or 'n'
-      vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+      vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = desc })
     end
 
     -- LSP keymaps
@@ -65,7 +65,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     -- Inlay hints toggle
     if client and client:supports_method('textDocument/inlayHint', event.buf) then
-      map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, 'Toggle inlay hints')
+      map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, 'Inlay hints')
     end
 
     if _G.MiniClue ~= nil then _G.MiniClue.ensure_buf_triggers(event.buf) end

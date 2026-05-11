@@ -13,12 +13,12 @@ vim.keymap.set('n', '<leader><tab>', '<C-^>', { desc = 'Go to previous buffer' }
 
 -- Diagnostics
 vim.keymap.set('n', 'gl', vim.diagnostic.open_float, { desc = 'Show line diagnostics' })
-vim.keymap.set('n', '<leader>xd', function() vim.diagnostic.setloclist() end, { desc = 'Buffer diagnostics to loclist' })
-vim.keymap.set('n', '<leader>xD', function() vim.diagnostic.setqflist() end, { desc = 'Workspace diagnostics to quickfix' })
+vim.keymap.set('n', '<leader>xd', function() vim.diagnostic.setloclist() end, { desc = 'Buffer to loclist' })
+vim.keymap.set('n', '<leader>xD', function() vim.diagnostic.setqflist() end, { desc = 'Workspace to quickfix' })
 
 -- Yank utilities (see commands.lua)
-vim.keymap.set('n', '<leader>yb', '<CMD>:BufferYank<CR>', { desc = 'Yank buffer contents' })
-vim.keymap.set('n', '<leader>yp', '<CMD>FilePathYank<CR>', { desc = 'Yank file path' })
+vim.keymap.set('n', '<leader>yb', '<CMD>:BufferYank<CR>', { desc = 'Buffer contents' })
+vim.keymap.set('n', '<leader>yp', '<CMD>FilePathYank<CR>', { desc = 'File path' })
 
 -- Terminal
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })

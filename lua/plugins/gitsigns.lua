@@ -49,8 +49,8 @@ require('gitsigns').setup {
     map('n', '<leader>hq', gitsigns.setqflist, { desc = 'Hunks to quickfix' })
 
     -- Toggles
-    map('n', '<leader>tb', gitsigns.toggle_current_line_blame, { desc = 'Toggle blame line' })
-    map('n', '<leader>tw', gitsigns.toggle_word_diff, { desc = 'Toggle word diff' })
+    map('n', '<leader>tb', gitsigns.toggle_current_line_blame, { desc = 'Blame line' })
+    map('n', '<leader>tw', gitsigns.toggle_word_diff, { desc = 'Word diff' })
 
     -- Text object
     map({ 'o', 'x' }, 'ih', gitsigns.select_hunk)
