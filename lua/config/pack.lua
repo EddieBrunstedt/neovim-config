@@ -50,9 +50,7 @@ vim.pack.add({
 
   -- UI / UX
   -- gh 'EdenEast/nightfox.nvim',
-  -- gh 'scottmckendry/cyberdream.nvim',
-  -- gh 'kepano/flexoki-neovim',
-  gh 'folke/tokyonight.nvim',
+  gh 'scottmckendry/cyberdream.nvim',
   gh 'NMAC427/guess-indent.nvim',
   gh 'folke/flash.nvim',
   gh 'folke/todo-comments.nvim',

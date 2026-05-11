@@ -14,11 +14,9 @@
 --   },
 -- }
 
--- require('cyberdream').setup {
---   italic_comments = true,
--- }
+require('cyberdream').setup {
+  italic_comments = true,
+  colors = { bg = '#100F0F' },
+}
 
--- vim.cmd.colorscheme 'cyberdream'
--- vim.cmd.colorscheme 'flexoki-dark'
--- vim.cmd.colorscheme 'tokyonight'
-vim.cmd.colorscheme 'tokyonight-night'
+vim.cmd.colorscheme 'cyberdream'
