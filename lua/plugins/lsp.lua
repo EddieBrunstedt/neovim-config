@@ -26,8 +26,20 @@ vim.api.nvim_create_autocmd('LspAttach', {
     map('grr', lsp_picker 'references', 'Goto references')
     map('grt', lsp_picker 'type_definition', 'Goto type definition')
 
-    -- Document highlight: highlight symbol under cursor
     local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+    -- Disable rust-analyzer's semantic tokens. After certain proc-macro-
+    -- perturbing edits, r-a's analysis wedges and identifiers stay
+    -- highlighted as `@lsp.type.unresolvedReference` until the LSP is
+    -- restarted. Disabling just delta requests didn't help — the server's
+    -- model itself goes bad. Treesitter still colors; diagnostics still
+    -- work. Match both names: `rust_analyzer` (lspconfig), `rust-analyzer`
+    -- (rustaceanvim).
+    if client and (client.name == 'rust_analyzer' or client.name == 'rust-analyzer') then
+      client.server_capabilities.semanticTokensProvider = nil
+    end
+
+    -- Document highlight: highlight symbol under cursor
     if client and client:supports_method('textDocument/documentHighlight', event.buf) then
       local highlight_augroup = vim.api.nvim_create_augroup('lsp-highlight', { clear = false })
       vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
