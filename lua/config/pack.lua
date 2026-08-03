@@ -32,6 +32,15 @@ vim.api.nvim_create_autocmd('PackChanged', {
       vim.cmd 'TSUpdate'
       return
     end
+
+    if name == 'tailwind-tools.nvim' then
+      if not ev.data.active then vim.cmd.packadd 'tailwind-tools.nvim' end
+      -- :UpdateRemotePlugins is only defined once runtime plugins load, which
+      -- happens after init.lua. Source it early so this hook can call it.
+      if vim.fn.exists ':UpdateRemotePlugins' ~= 2 then vim.cmd 'runtime plugin/rplugin.vim' end
+      vim.cmd 'UpdateRemotePlugins'
+      return
+    end
   end,
 })
 
@@ -49,11 +58,11 @@ vim.pack.add({
   gh 'jay-babu/mason-nvim-dap.nvim',
 
   -- UI / UX
-  -- gh 'EdenEast/nightfox.nvim',
-  gh 'scottmckendry/cyberdream.nvim',
+  gh 'EdenEast/nightfox.nvim',
   gh 'NMAC427/guess-indent.nvim',
   gh 'folke/flash.nvim',
   gh 'folke/todo-comments.nvim',
+  gh 'folke/zen-mode.nvim',
   gh 'lewis6991/gitsigns.nvim',
   gh 'lukas-reineke/indent-blankline.nvim',
   gh 'nvim-mini/mini.nvim',
@@ -69,7 +78,9 @@ vim.pack.add({
   gh 'j-hui/fidget.nvim',
   { src = gh 'mrcjkb/rustaceanvim', version = vim.version.range '^9' },
   { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' },
+  gh 'nvim-treesitter/nvim-treesitter-context',
   gh 'pmizio/typescript-tools.nvim',
+  gh 'luckasRanarison/tailwind-tools.nvim',
   gh 'stevearc/conform.nvim',
 
   -- Debugging
