@@ -14,13 +14,19 @@ local check_version = function()
   end
 end
 
+-- What silently degrades when a given executable is missing, so the warning
+-- says more than just "not found".
+local missing_exe_advice = {
+  rg = 'The hidden-file pickers (<leader>sF, <leader>sG) fall back to plain pickers, which never show dotfiles.',
+}
+
 local check_external_reqs = function()
   for _, exe in ipairs { 'git', 'make', 'unzip', 'rg' } do
     local is_executable = vim.fn.executable(exe) == 1
     if is_executable then
       vim.health.ok(string.format("Found executable: '%s'", exe))
     else
-      vim.health.warn(string.format("Could not find executable: '%s'", exe))
+      vim.health.warn(string.format("Could not find executable: '%s'", exe), missing_exe_advice[exe])
     end
   end
 

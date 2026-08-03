@@ -6,6 +6,7 @@ miniclue.setup {
   triggers = {
     -- Leader mappings
     { mode = { 'n', 'x' }, keys = '<Leader>' },
+    { mode = { 'n', 'x' }, keys = 's' },
     { mode = 'n', keys = '[' },
     { mode = 'n', keys = ']' },
     { mode = 'i', keys = '<C-x>' },
@@ -20,11 +21,11 @@ miniclue.setup {
 
   clues = {
     { mode = { 'n', 'x' }, keys = '<Leader>h', desc = 'Git' },
-    { mode = { 'n', 'x' }, keys = '<Leader>s', desc = 'Search' },
+    { mode = 'n', keys = '<Leader>s', desc = 'Search' }, -- pickers are normal-mode only
     { mode = 'n', keys = '<Leader>t', desc = 'Toggle' },
     { mode = 'n', keys = '<Leader>x', desc = 'Diagnostics' },
     { mode = 'n', keys = '<Leader>y', desc = 'Yank' },
-    { mode = 'n', keys = 'gr', desc = 'LSP Actions' },
+    { mode = { 'n', 'x' }, keys = 's', desc = 'LSP Actions' },
 
     miniclue.gen_clues.square_brackets(),
     miniclue.gen_clues.builtin_completion(),
@@ -33,6 +34,8 @@ miniclue.setup {
     miniclue.gen_clues.registers(),
     miniclue.gen_clues.windows(),
     miniclue.gen_clues.z(),
+
+    miniclue.set_mapping_desc('n', 'gx', ''), -- drop its very long description
   },
 
   window = {
