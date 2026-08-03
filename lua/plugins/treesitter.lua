@@ -4,16 +4,23 @@
 local parsers = {
   'bash',
   'c',
+  'css',
   'diff',
   'html',
+  'javascript',
   'lua',
   'luadoc',
   'markdown',
   'markdown_inline',
   'query',
   'regex',
+  'rust',
+  'toml',
+  'tsx',
+  'typescript',
   'vim',
   'vimdoc',
+  'yaml',
 }
 require('nvim-treesitter').install(parsers)
 
