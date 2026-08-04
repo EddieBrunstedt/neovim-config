@@ -58,13 +58,13 @@ vim.pack.add({
   gh 'jay-babu/mason-nvim-dap.nvim',
 
   -- UI / UX
-  gh 'EdenEast/nightfox.nvim',
   gh 'NMAC427/guess-indent.nvim',
   gh 'folke/flash.nvim',
   gh 'folke/todo-comments.nvim',
   gh 'folke/zen-mode.nvim',
   gh 'lewis6991/gitsigns.nvim',
   gh 'lukas-reineke/indent-blankline.nvim',
+  gh 'miikanissi/modus-themes.nvim',
   gh 'nvim-mini/mini.nvim',
   gh 'stevearc/oil.nvim',
   gh 'stevearc/quicker.nvim',
