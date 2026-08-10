@@ -103,46 +103,57 @@ pick.setup {
   },
 }
 
--- Dotfile-inclusive counterparts of `files`/`grep_live`. `--hidden` only lifts
--- the dotfile filter, so `.gitignore` still excludes `node_modules` and friends;
--- `.git` needs the glob because it is not itself gitignored. One flag per
--- element, so this doubles as an rg config-file body.
-local RG_HIDDEN = { '--hidden', '--glob=!.git/' }
+-- rg skips symlinks unless asked, so a tree stitched together from them (a
+-- dotfiles `.config` directory, say) comes back completely empty. Wanted by
+-- every picker, hence the base list. One flag per element, so these double as
+-- rg config-file bodies.
+local RG_BASE = { '--follow' }
+
+-- Dotfile-inclusive variants add `--hidden`, which only lifts the dotfile
+-- filter: `.gitignore` still excludes `node_modules` and friends, while `.git`
+-- needs the glob because it is not itself gitignored.
+local RG_HIDDEN = vim.list_extend({ '--hidden', '--glob=!.git/' }, RG_BASE)
+
 local has_rg = vim.fn.executable 'rg' == 1
 
--- Say so on every use: silently returning results with no dotfiles in them is
--- the one outcome that looks like the picker worked.
+-- Say so on every use: silently returning a partial result is the one outcome
+-- that looks like the picker worked.
 local function no_rg_fallback(picker)
-  vim.notify('Hidden-file pickers need `rg`. Falling back to the plain picker.', vim.log.levels.WARN)
+  vim.notify('Needs `rg` to follow symlinks and include hidden files. Falling back to the built-in picker.', vim.log.levels.WARN)
   return picker()
 end
 
-local function files_hidden()
+local function rg_files(flags, name)
   if not has_rg then return no_rg_fallback(pick.builtin.files) end
-  local command = vim.list_extend({ 'rg', '--files', '--color=never' }, RG_HIDDEN)
-  return pick.builtin.cli({ command = command }, { source = { name = 'Files (rg, hidden)' } })
+  local command = vim.list_extend({ 'rg', '--files', '--color=never' }, flags)
+  return pick.builtin.cli({ command = command }, { source = { name = name } })
 end
 
-local function grep_live_hidden()
+local function rg_grep_live(flags, name)
   if not has_rg then return no_rg_fallback(pick.builtin.grep_live) end
 
   -- `grep_live` rebuilds its command every keystroke, leaving rg's own config
   -- file as the only way in. `MiniPick.start` blocks until the picker stops, so
-  -- the override never outlives it.
-  local path = vim.fs.joinpath(vim.fn.stdpath 'cache', 'rg-hidden.conf')
-  vim.fn.writefile(RG_HIDDEN, path)
+  -- the override never outlives it and one scratch file serves every variant.
+  local path = vim.fs.joinpath(vim.fn.stdpath 'cache', 'mini-pick-rg.conf')
+  vim.fn.writefile(flags, path)
   local cached = vim.env.RIPGREP_CONFIG_PATH
   vim.env.RIPGREP_CONFIG_PATH = path
-  local ok, err = pcall(pick.builtin.grep_live, { tool = 'rg' }, { source = { name = 'Grep live (rg, hidden)' } })
+  local ok, err = pcall(pick.builtin.grep_live, { tool = 'rg' }, { source = { name = name } })
   vim.env.RIPGREP_CONFIG_PATH = cached
   if not ok then error(err) end
 end
 
+local function files() return rg_files(RG_BASE, 'Files (rg)') end
+local function files_hidden() return rg_files(RG_HIDDEN, 'Files (rg, hidden)') end
+local function grep_live() return rg_grep_live(RG_BASE, 'Grep live (rg)') end
+local function grep_live_hidden() return rg_grep_live(RG_HIDDEN, 'Grep live (rg, hidden)') end
+
 vim.keymap.set('n', '<leader>sh', pick.builtin.help, { desc = 'Help' })
 vim.keymap.set('n', '<leader>sk', extra.pickers.keymaps, { desc = 'Keymaps' })
-vim.keymap.set('n', '<leader>sf', pick.builtin.files, { desc = 'Files' })
+vim.keymap.set('n', '<leader>sf', files, { desc = 'Files' })
 vim.keymap.set('n', '<leader>sF', files_hidden, { desc = 'Files (incl. hidden)' })
-vim.keymap.set('n', '<leader>sg', pick.builtin.grep_live, { desc = 'Grep' })
+vim.keymap.set('n', '<leader>sg', grep_live, { desc = 'Grep' })
 vim.keymap.set('n', '<leader>sG', grep_live_hidden, { desc = 'Grep (incl. hidden)' })
 vim.keymap.set('n', '<leader>sd', extra.pickers.diagnostic, { desc = 'Diagnostics' })
 vim.keymap.set('n', '<leader>sr', pick.builtin.resume, { desc = 'Resume' })
