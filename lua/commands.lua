@@ -13,3 +13,23 @@ vim.api.nvim_create_user_command('BufferYank', function()
   vim.fn.setreg('+', content)
   vim.notify 'Copied buffer to clipboard'
 end, {})
+
+-- Render: Preview the current file in a browser window.
+-- Needs the external `render` tool on $PATH. Bang passes --save, which writes
+-- the html beside the source instead of into the runtime dir.
+vim.api.nvim_create_user_command('Render', function(opts)
+  local file = vim.fn.expand '%:p'
+  if file == '' then
+    vim.notify('Render: buffer has no file', vim.log.levels.ERROR)
+    return
+  end
+  if vim.fn.executable 'render' == 0 then
+    vim.notify('Render: `render` not found on $PATH', vim.log.levels.ERROR)
+    return
+  end
+  if vim.bo.modified then vim.cmd.write() end
+  local cmd = opts.bang and { 'render', '--save', file } or { 'render', file }
+  vim.system(cmd, { text = true }, function(res)
+    if res.code ~= 0 then vim.schedule(function() vim.notify('Render: ' .. vim.trim(res.stderr), vim.log.levels.ERROR) end) end
+  end)
+end, { bang = true, desc = 'Preview buffer in a browser window' })
