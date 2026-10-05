@@ -27,6 +27,9 @@ require('nvim-treesitter').install(parsers)
 ---@param buf integer
 ---@param language string
 local function treesitter_try_attach(buf, language)
+  -- Check if the buffer is valid (might not be after install completes)
+  if not vim.api.nvim_buf_is_valid(buf) then return end
+
   -- Check if a parser exists and load it.
   if not vim.treesitter.language.add(language) then return end
 
@@ -42,7 +45,7 @@ local function treesitter_try_attach(buf, language)
   -- If there is no indent query, indentexpr falls back to Vim's built-in one.
   local has_indent_query = vim.treesitter.query.get(language, 'indents') ~= nil
 
-  if has_indent_query then vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" end
+  if has_indent_query then vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" end
 end
 
 local available_parsers = require('nvim-treesitter').get_available()
