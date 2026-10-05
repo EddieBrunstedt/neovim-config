@@ -90,8 +90,10 @@ require('conform').setup {
     -- config shipped here, but let a project's own dprint.json win.
     dprint = {
       args = function(self, ctx)
-        if self:cwd(ctx) then return { 'fmt', '--stdin', '$FILENAME' } end
-        return { 'fmt', '--config', vim.fn.stdpath 'config' .. '/dprint.jsonc', '--stdin', '$FILENAME' }
+        -- dprint rejects an absolute path that does not exist on disk yet (unnamed
+        -- buffers, a new file's first save), but accepts any relative one.
+        if self:cwd(ctx) then return { 'fmt', '--stdin', '$RELATIVE_FILEPATH' } end
+        return { 'fmt', '--config', vim.fn.stdpath 'config' .. '/dprint.jsonc', '--stdin', '$RELATIVE_FILEPATH' }
       end,
     },
 
