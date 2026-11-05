@@ -70,7 +70,7 @@ Neovim's configurations are located under the following paths, depending on your
 
 ```bash
 # Clone this configuration
-git clone https://gitlab.com/EddieBrunstedt/neovim-config.git ~/.config/nvim
+git clone https://github.com/EddieBrunstedt/neovim-config.git ~/.config/nvim
 
 # Launch Neovim - plugins will install automatically
 nvim
